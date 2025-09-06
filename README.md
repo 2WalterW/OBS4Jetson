@@ -31,12 +31,14 @@
 
 ## ⚡ 快速安装
 
+### 方法1: 下载Release版本 (推荐)
+
 ```bash
 # 1. 下载安装包
-wget https://github.com/YourUsername/OBS4Jetson/releases/download/v32.0.0/obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz
+wget https://github.com/2WalterW/OBS4Jetson/releases/download/v32.0.0/obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz
 
 # 2. 验证完整性
-wget https://github.com/YourUsername/OBS4Jetson/releases/download/v32.0.0/obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz.sha256
+wget https://github.com/2WalterW/OBS4Jetson/releases/download/v32.0.0/obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz.sha256
 sha256sum -c obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz.sha256
 
 # 3. 解压安装
@@ -46,6 +48,17 @@ sudo ./install.sh
 
 # 4. 启动使用
 obs
+```
+
+### 方法2: 克隆仓库
+
+```bash
+# 克隆完整项目 (包含安装包)
+git clone https://github.com/2WalterW/OBS4Jetson.git
+cd OBS4Jetson
+tar -xzf obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz
+cd obs-studio-jetson-package
+sudo ./install.sh
 ```
 
 ## 🎯 核心功能
