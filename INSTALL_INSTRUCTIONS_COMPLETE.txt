@@ -1,0 +1,64 @@
+OBS Studio for Jetson AGX Orin - 完整版安装说明
+===================================================
+
+🎉 现在包含完整的FFmpeg 7.1 + NVMPI硬件编码支持！
+
+## 快速安装 (一键式)
+
+1. 下载完整安装包：
+   obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz (96MB)
+
+2. 验证文件完整性：
+   sha256sum -c obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz.sha256
+
+3. 解压并安装：
+   tar -xzf obs-studio-jetson-agx-orin-v32.0.0-complete-20250906.tar.gz
+   cd obs-studio-jetson-package
+   sudo ./install.sh
+
+4. 启动使用：
+   obs
+
+## 重要说明
+
+✅ 无需单独安装FFmpeg - 已包含在安装包中！
+✅ 自动获得NVMPI硬件编码支持
+✅ 完整的Qt6 GUI界面
+✅ 支持专业直播和录制功能
+
+## 系统要求
+
+- Jetson AGX Orin 开发板
+- JetPack 6.2.1 (Ubuntu 22.04 ARM64)
+- 8GB+ 内存推荐
+- 500MB+ 存储空间
+- root权限 (安装时需要)
+
+## 包含内容
+
+📦 OBS Studio 32.0.0-beta2 (Jetson优化版)
+📦 FFmpeg 7.1 with NVMPI support (完整版)
+📦 40+ 插件模块
+📦 完整安装/卸载工具
+📦 详细使用文档
+
+## 技术特性
+
+🚀 NVMPI H.264/HEVC 硬件编码
+🚀 GPU加速视频处理  
+🚀 低延迟直播推流
+🚀 4K高质量录制
+🚀 专业音频混音
+
+## 获得帮助
+
+详细信息请查看：
+- RELEASE_INFO_COMPLETE.md (完整发布说明)
+- README.md (使用手册)
+- 安装包内的VERSION文件
+
+成功安装后，您将拥有一个完整的、专为Jetson AGX Orin优化的
+专业级直播录制解决方案！
+
+版本: OBS Studio 32.0.0 + FFmpeg 7.1 Complete Package
+日期: 2025-09-06
