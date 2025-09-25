@@ -4,7 +4,10 @@ This guide explains how **any** Jetson user running JetPack 6.2 (L4T 36.4.3) c
 
 ## 1. Obtain the packages
 
-Two `.deb` files are required: `ffmpeg-nvmpi_0.0+git20250115-1.deb` (≈56 MB) and `obs-jetson-nvmpi_32.0.0-nvmpi1.deb` (≈44 MB). Copy them to the Jetson with any transfer method (e.g., `scp`, USB drive) and place them in a working directory such as `/tmp`.
+Gather the following artifacts on the Jetson (e.g., via `scp` into `/tmp`):
+- `ffmpeg-nvmpi_0.0+git20250115-1.deb` (≈56 MB)
+- `obs-jetson-nvmpi_32.0.0-nvmpi1.deb` (≈44 MB)
+- `obs-multi-rtmp-jetson_0.7.3.0.tar.gz` (≈3 MB) containing `usr/local/lib/obs-plugins/obs-multi-rtmp.so` and the `locale/` resources.
 
 > Both packages install under `/usr/local` so they coexist with the system `/usr`. Post-install scripts refresh `ldconfig` and desktop caches automatically.
 
@@ -40,10 +43,18 @@ Two `.deb` files are required: `ffmpeg-nvmpi_0.0+git20250115-1.deb` (≈56 MB)
    This drops the toolchain under `/usr/local/ffmpeg-nvmpi` and adds wrappers (`ffmpeg-nvmpi`, `ffprobe-nvmpi`) that set the correct `LD_LIBRARY_PATH`.
 
 2. Install the matching OBS Studio build:
+  ```bash
+  sudo dpkg -i obs-jetson-nvmpi_32.0.0-nvmpi1.deb
+  ```
+  OBS installs to `/usr/local/obs-jetson` and ships a desktop entry named **OBS Studio (Jetson NVENC)**. Both packages declare `Conflicts` against the stock `obs-studio` to avoid ABI mismatches.
+
+3. Add the multi-RTMP output plugin (the archive preserves the `usr/` layout, so run it from the directory that holds the tarball):
    ```bash
-   sudo dpkg -i obs-jetson-nvmpi_32.0.0-nvmpi1.deb
+   tar -xzf obs-multi-rtmp-jetson_0.7.3.0.tar.gz
+   sudo rsync -a obs-multi-rtmp-jetson/usr/ /usr/
+   sudo ldconfig
    ```
-   OBS installs to `/usr/local/obs-jetson` and ships a desktop entry named **OBS Studio (Jetson NVENC)**. Both packages declare `Conflicts` against the stock `obs-studio` to avoid ABI mismatches.
+   This copies `obs-multi-rtmp.so` into `/usr/local/lib/obs-plugins/` and installs 70+ locale files under `/usr/local/share/obs/obs-plugins/obs-multi-rtmp/locale`.
 
 If `dpkg` reports missing dependencies, rerun `sudo apt-get install -f` to let APT resolve them.
 
@@ -54,7 +65,7 @@ ffmpeg-nvmpi -hide_banner -encoders | grep nvmpi
 obs --version
 ```
 
-Launch OBS from the desktop or via `QT_FATAL_WARNINGS=1 obs --verbose`. Under **Settings ➝ Output ➝ Recording**, confirm that *H.264 (Jetson NVENC)* (and optionally *H.265 (Jetson NVENC)*) appear. Start a short recording and check `~/.config/obs-studio/logs/latest.log` for lines mentioning `nvmpi: global headers not supported, SPS/PPS will be sent inline`; their presence indicates the nvmpi encoder loaded successfully.
+Launch OBS from the desktop or via `QT_FATAL_WARNINGS=1 obs --verbose`. Under **Settings ➝ Output ➝ Recording**, confirm that *H.264 (Jetson NVENC)* (and optionally *H.265 (Jetson NVENC)*) appear. Open **Docks ➝ Multiple RTMP Outputs** to ensure the plugin is active, then start a short recording; check `~/.config/obs-studio/logs/latest.log` for lines mentioning `nvmpi: global headers not supported, SPS/PPS will be sent inline` (encoder path) and `Loaded locale '…' for obs-multi-rtmp` (plugin resources) to verify both components.
 
 For GPU utilization, open `jtop` ➝ **HW engines** while recording. `NVENC` and `VIC` should activate; `NVDEC` lights up only when decoding with the nvmpi decoder (playback, preview, or ffmpeg tests).
 
@@ -83,5 +94,5 @@ For GPU utilization, open `jtop` ➝ **HW engines** while recording. `NVENC` and
 
 ## 7. Backups & redistribution
 
-- Keep a copy of both `.deb` files in a safe location (NAS, artifact store, removable media). They are self-contained; no extra firmware is required beyond JetPack 6.2.
-- When sharing with another Jetson, transfer both packages together and follow the same install order (FFmpeg first, OBS second) so the nvmpi plugin resolves correctly.
+- Keep the two `.deb` files and the plugin tarball together when archiving or handing off to another device.
+- On additional Jetsons, repeat the same order: FFmpeg `.deb`, OBS `.deb`, plugin tarball (untar + `rsync` + `ldconfig`).
